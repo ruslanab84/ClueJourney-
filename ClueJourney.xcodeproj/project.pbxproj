@@ -6,7 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1DA4014368884E79B3F0CA0F /* Content in Resources */ = {isa = PBXBuildFile; fileRef = 35A23F8BFD5E4BF2A92BFBEE /* Content */; };
+		61B4FFB758F249DB97BB910F /* PPApplication in Frameworks */ = {isa = PBXBuildFile; productRef = 8C8CE97F7C62478A842ED04E /* PPApplication */; };
+		7777FB6A1EFD468393B19D38 /* PPFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 31B6FE0A65574D51A47297AE /* PPFeatures */; };
+		D13CBD668E564D5C8BEC7699 /* PPData in Frameworks */ = {isa = PBXBuildFile; productRef = 9607D39EBA364FFD941655D1 /* PPData */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		35A23F8BFD5E4BF2A92BFBEE /* Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Content; sourceTree = "<group>"; };
 		B7132B983045DD8C00763742 /* ClueJourney.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClueJourney.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -23,6 +31,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61B4FFB758F249DB97BB910F /* PPApplication in Frameworks */,
+				D13CBD668E564D5C8BEC7699 /* PPData in Frameworks */,
+				7777FB6A1EFD468393B19D38 /* PPFeatures in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +44,7 @@
 			isa = PBXGroup;
 			children = (
 				B7132B9A3045DD8C00763742 /* ClueJourney */,
+				35A23F8BFD5E4BF2A92BFBEE /* Content */,
 				B7132B993045DD8C00763742 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +77,9 @@
 			);
 			name = ClueJourney;
 			packageProductDependencies = (
+				8C8CE97F7C62478A842ED04E /* PPApplication */,
+				9607D39EBA364FFD941655D1 /* PPData */,
+				31B6FE0A65574D51A47297AE /* PPFeatures */,
 			);
 			productName = ClueJourney;
 			productReference = B7132B983045DD8C00763742 /* ClueJourney.app */;
@@ -94,6 +109,9 @@
 			);
 			mainGroup = B7132B8F3045DD8C00763742;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				07EAD5DD221E4E7995C39011 /* XCLocalSwiftPackageReference "Packages/PuzzlePassportKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B7132B993045DD8C00763742 /* Products */;
 			projectDirPath = "";
@@ -109,6 +127,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DA4014368884E79B3F0CA0F /* Content in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +197,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -236,7 +255,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -273,7 +292,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -305,7 +324,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -332,6 +351,31 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		07EAD5DD221E4E7995C39011 /* XCLocalSwiftPackageReference "Packages/PuzzlePassportKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PuzzlePassportKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		31B6FE0A65574D51A47297AE /* PPFeatures */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07EAD5DD221E4E7995C39011 /* XCLocalSwiftPackageReference "Packages/PuzzlePassportKit" */;
+			productName = PPFeatures;
+		};
+		8C8CE97F7C62478A842ED04E /* PPApplication */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07EAD5DD221E4E7995C39011 /* XCLocalSwiftPackageReference "Packages/PuzzlePassportKit" */;
+			productName = PPApplication;
+		};
+		9607D39EBA364FFD941655D1 /* PPData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07EAD5DD221E4E7995C39011 /* XCLocalSwiftPackageReference "Packages/PuzzlePassportKit" */;
+			productName = PPData;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B7132B903045DD8C00763742 /* Project object */;
 }

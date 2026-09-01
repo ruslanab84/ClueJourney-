@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "it.rome.teatro-opera.001",
+  "countryID": "it",
+  "cityID": "rome",
+  "locationID": "teatro-opera",
+  "titleKey": "level.it.rome.teatro-opera.001.title",
+  "factID": "fact.it.rome.teatro-opera.001",
+  "presentation": {
+    "boardStyle": "theatre"
+  },
+  "puzzle": {
+    "family": "position",
+    "capabilities": [
+      "spatialPositioning",
+      "lockedAssignments",
+      "swap",
+      "undo"
+    ],
+    "entities": [
+      { "id": "livia", "nameKey": "character.livia" },
+      { "id": "marco", "nameKey": "character.marco" },
+      { "id": "sara", "nameKey": "character.sara" },
+      { "id": "tomas", "nameKey": "character.tomas" }
+    ],
+    "positions": [
+      { "id": "seat.front.left", "row": 0, "column": 0, "group": "stalls" },
+      { "id": "seat.front.right", "row": 0, "column": 1, "group": "stalls" },
+      { "id": "seat.back.left", "row": 1, "column": 0, "group": "stalls" },
+      { "id": "seat.back.right", "row": 1, "column": 1, "group": "stalls" }
+    ],
+    "initialAssignments": [
+      { "entityID": "livia", "positionID": "seat.back.left", "locked": true },
+      { "entityID": "sara", "positionID": "seat.back.right", "locked": false }
+    ],
+    "constraints": [
+      {
+        "type": "leftOf",
+        "subjectID": "marco",
+        "relatedID": "sara",
+        "clueKey": "clue.it.rome.teatro-opera.001.01"
+      },
+      {
+        "type": "rightOf",
+        "subjectID": "tomas",
+        "relatedID": "livia",
+        "clueKey": "clue.it.rome.teatro-opera.001.02"
+      },
+      {
+        "type": "fixedAssignment",
+        "subjectID": "livia",
+        "positionID": "seat.back.left",
+        "clueKey": "clue.it.rome.teatro-opera.001.03"
+      }
+    ],
+    "movePolicy": {
+      "threeStarThreshold": 3,
+      "twoStarThreshold": 5,
+      "undoCountsAsMove": false,
+      "occupiedDropPolicy": "swap"
+    }
+  }
+}

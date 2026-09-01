@@ -5,20 +5,24 @@
 //  Created by Ruslan Abdulov on 31.08.26.
 //
 
+import PPApplication
+import PPFeatures
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    let journey: PuzzleJourney?
 
-#Preview {
-    ContentView()
+    var body: some View {
+        Group {
+            if let journey {
+                JourneyFlowView(journey: journey)
+            } else {
+                ContentUnavailableView(
+                    "Unable to start Clue Journey",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("The bundled campaign or progress store could not be opened.")
+                )
+            }
+        }
+    }
 }

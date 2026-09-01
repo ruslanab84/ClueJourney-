@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "fact.it.rome.teatro-opera.001",
+  "locationID": "teatro-opera",
+  "titleKey": "fact.it.rome.teatro-opera.001.title",
+  "bodyKey": "fact.it.rome.teatro-opera.001.body",
+  "unlockLevelID": "it.rome.teatro-opera.001",
+  "source": {
+    "title": "Teatro Costanzi — Teatro dell'Opera di Roma",
+    "url": "https://www.operaroma.it/luoghi/teatro-costanzi/",
+    "accessed": "2026-08-31"
+  }
+}

@@ -1,0 +1,77 @@
+"app.name" = "Clue Journey";
+"journey.title" = "Clue Journey";
+"journey.subtitle" = "Follow the trail. Solve the scene. Discover the story.";
+"journey.destination" = "Destination";
+"journey.explore" = "Explore Italy";
+
+"country.it.name" = "Italy";
+"country.it.tagline" = "A journey through living history";
+"country.it.description" = "Follow a trail of clues through remarkable Italian places, one carefully observed scene at a time.";
+"country.it.action" = "Travel to Rome";
+
+"city.rome.name" = "Rome";
+"city.rome.tagline" = "The Eternal City";
+"city.rome.description" = "Ancient streets, grand stages and small details are waiting to be noticed.";
+"city.rome.action" = "Visit the theatre";
+
+"location.teatro-opera.name" = "Teatro dell’Opera";
+"location.teatro-opera.description" = "Take your seat inside Rome’s historic opera house and use the clues to arrange the audience.";
+"location.teatro-opera.action" = "Begin the puzzle";
+
+"level.it.rome.teatro-opera.001.title" = "Opening Night";
+"level.it.rome.teatro-opera.001.summary" = "Arrange four guests before the curtain rises.";
+"level.it.rome.teatro-opera.001.objective" = "Seat every guest so all three clues are true.";
+"level.completed" = "Discovery unlocked";
+
+"character.livia" = "Livia";
+"character.marco" = "Marco";
+"character.sara" = "Sara";
+"character.tomas" = "Tomas";
+
+"clue.it.rome.teatro-opera.001.01" = "Marco sits somewhere to the left of Sara in the same row.";
+"clue.it.rome.teatro-opera.001.02" = "Tomas sits somewhere to the right of Livia in the same row.";
+"clue.it.rome.teatro-opera.001.03" = "Livia’s reserved seat is the back-left chair.";
+
+"puzzle.logicChallenge" = "Logic challenge";
+"puzzle.title" = "Audience Puzzle";
+"puzzle.stage" = "Audience seating";
+"puzzle.clues" = "Clues";
+"puzzle.travellers" = "Waiting guests";
+"puzzle.emptySeat" = "Empty seat";
+"puzzle.row" = "Row";
+"puzzle.seat" = "Seat";
+"puzzle.fixedSeat" = "Fixed seat";
+"puzzle.selected" = "Selected";
+"puzzle.fixedSeatHint" = "This guest cannot be moved.";
+"puzzle.allSeated" = "Every guest has a seat";
+"puzzle.selectHint" = "Select a movable guest.";
+"puzzle.placeHint" = "Place the selected guest here.";
+"puzzle.undo" = "Undo";
+"puzzle.hint" = "Hint";
+"puzzle.restart" = "Restart";
+"puzzle.clue.satisfied" = "Satisfied";
+"puzzle.clue.violated" = "Not satisfied";
+"puzzle.clue.unresolved" = "Not resolved yet";
+
+"completion.title" = "Case solved";
+"completion.subtitle" = "The audience is seated and the curtain can rise.";
+"completion.reward" = "Journey stars";
+"completion.discover" = "Reveal the discovery";
+
+"discovery.eyebrow" = "Did you know?";
+"discovery.done" = "Continue exploring";
+"fact.it.rome.teatro-opera.001.title" = "An opening night in 1880";
+"fact.it.rome.teatro-opera.001.body" = "Rome’s opera house was inaugurated on 27 November 1880 with Rossini’s Semiramide.";
+
+"error.content.title" = "Journey unavailable";
+"error.content.load" = "The campaign could not be loaded.";
+"error.puzzle.start" = "This puzzle could not be started.";
+"error.puzzle.action" = "That move could not be completed.";
+"error.puzzle.hint" = "A hint is not available right now.";
+"error.title" = "Something went wrong";
+"error.dismiss" = "OK";
+
+"Completed" = "Completed";
+"Ready" = "Ready";
+"Moves" = "Moves";
+"Stars" = "Stars";

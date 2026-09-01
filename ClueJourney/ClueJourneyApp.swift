@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct ClueJourneyApp: App {
+    private let container = try? AppContainer.live()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(journey: container?.journey)
         }
     }
 }
