@@ -61,16 +61,29 @@ public enum UndoScoringPolicy: String, Hashable, Codable, Sendable {
     case countsAsMove
 }
 
+public enum PlacementPolicy: String, Hashable, Codable, Sendable {
+    /// Any structurally legal placement is accepted; clues report their state.
+    case free
+    /// A placement that no solution can extend is refused, and the attempt still spends a move.
+    case verified
+}
+
 public struct MovePolicy: Hashable, Codable, Sendable {
     public let occupiedDrop: OccupiedDropPolicy
     public let undoScoring: UndoScoringPolicy
+    public let placement: PlacementPolicy
+    public let moveLimit: Int?
 
     public init(
         occupiedDrop: OccupiedDropPolicy,
-        undoScoring: UndoScoringPolicy = .restoresPreviousMoveCount
+        undoScoring: UndoScoringPolicy = .restoresPreviousMoveCount,
+        placement: PlacementPolicy = .free,
+        moveLimit: Int? = nil
     ) {
         self.occupiedDrop = occupiedDrop
         self.undoScoring = undoScoring
+        self.placement = placement
+        self.moveLimit = moveLimit
     }
 }
 

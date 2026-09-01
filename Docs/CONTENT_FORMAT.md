@@ -40,11 +40,15 @@ Each file describes travel metadata plus one logical puzzle. The engine receives
       "threeStarThreshold": 5,
       "twoStarThreshold": 7,
       "undoCountsAsMove": false,
-      "occupiedDropPolicy": "swap"
+      "occupiedDropPolicy": "swap",
+      "placementPolicy": "verified",
+      "moveLimit": 9
     }
   }
 }
 ```
+
+`placementPolicy` is `free` (any structurally legal drop is accepted; clues report their state) or `verified` (a drop that no solution can extend is refused and the character returns to the tray, while the attempt still spends a move). It defaults to `free` when absent. `moveLimit` is the authored move budget; spending it before the arrangement is complete fails the attempt. It defaults to absent, meaning an unbudgeted level.
 
 IDs are stable, lowercase, and never derived from display text. Coordinates describe logical relationships only; artwork and pixel geometry stay in presentation. Constraint `type` values are typed engine rules. `clueKey` is display metadata, not executable logic.
 
@@ -70,7 +74,7 @@ Facts must be durable, curated claims with source provenance. Source metadata is
 
 ## Validation
 
-`ContentValidator` must reject unsupported schema versions, decode failures, duplicate or missing IDs, broken references, invalid constraints or locked assignments, missing localization keys, inconsistent star thresholds, missing fact provenance, zero solutions, and multiple solutions. Identical input must produce identical validation and solution order.
+`ContentValidator` must reject unsupported schema versions, decode failures, duplicate or missing IDs, broken references, invalid constraints or locked assignments, missing localization keys, inconsistent star thresholds, missing fact provenance, zero solutions, and multiple solutions. A `verified` level must declare a `moveLimit`, and no `moveLimit` may fall below the level's two-star threshold or below the number of placements its single solution requires. Identical input must produce identical validation and solution order.
 
 Run it against the authored content and base localization:
 

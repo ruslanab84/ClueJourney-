@@ -15,6 +15,8 @@ struct PPDataTests {
         #expect(levels.count == 1)
         #expect(facts.count == 1)
         #expect(levels[0].factID == facts[0].id)
+        #expect(levels[0].puzzle.movePolicy.placement == .verified)
+        #expect(levels[0].puzzle.movePolicy.moveLimit == 7)
     }
 
     @Test("SwiftData keeps best progress and a single discovery")

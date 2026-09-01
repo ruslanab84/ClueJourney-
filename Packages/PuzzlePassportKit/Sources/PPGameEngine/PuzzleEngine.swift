@@ -76,7 +76,9 @@ public enum PuzzleMoveRejection: Hashable, Sendable {
     case entityLocked(EntityID)
     case positionLocked(PositionID)
     case occupied(PositionID)
+    case contradictsClues(PositionID)
     case sessionCompleted
+    case sessionFailed
 }
 
 public enum PuzzleTransitionOutcome: Hashable, Sendable {
@@ -309,7 +311,7 @@ public struct PuzzleEngine: Sendable {
         case .undo:
             return undo(session, definition: definition)
         case .place(let entityID, let positionID):
-            return place(entityID, at: positionID, in: session, definition: definition)
+            return try place(entityID, at: positionID, in: session, definition: definition)
         }
     }
 
@@ -322,6 +324,16 @@ public struct PuzzleEngine: Sendable {
             seed: lockedArrangement(for: definition),
             limit: limit
         ).count
+    }
+
+    /// The puzzle's single solution, or `nil` when it has none or more than one.
+    public func solution(for definition: PuzzleDefinition) throws -> PuzzleArrangement? {
+        let candidates = try solutions(
+            for: definition,
+            seed: lockedArrangement(for: definition),
+            limit: 2
+        )
+        return candidates.count == 1 ? candidates.first : nil
     }
 
     public func hint(
@@ -340,12 +352,7 @@ public struct PuzzleEngine: Sendable {
             throw PuzzleEngineError.invalidSession(sessionValidation.issues)
         }
 
-        let candidates = try solutions(
-            for: definition,
-            seed: lockedArrangement(for: definition),
-            limit: 2
-        )
-        guard candidates.count == 1, let solution = candidates.first else { return nil }
+        guard let solution = try solution(for: definition) else { return nil }
 
         for entityID in definition.entities.map(\.id).sorted()
         where session.arrangement.position(of: entityID) != solution.position(of: entityID) {
@@ -360,9 +367,12 @@ public struct PuzzleEngine: Sendable {
         at targetPositionID: PositionID,
         in session: PuzzleSession,
         definition: PuzzleDefinition
-    ) -> PuzzleTransition {
+    ) throws -> PuzzleTransition {
         if case .completed = session.status {
             return PuzzleTransition(session: session, outcome: .rejected(.sessionCompleted))
+        }
+        if case .failed = session.status {
+            return PuzzleTransition(session: session, outcome: .rejected(.sessionFailed))
         }
 
         let knownEntities = Set(definition.entities.map(\.id))
@@ -411,6 +421,26 @@ public struct PuzzleEngine: Sendable {
         if let displacedEntityID, let sourcePositionID {
             occupants[sourcePositionID] = displacedEntityID
         }
+        let candidate = PuzzleArrangement(occupantsByPosition: occupants)
+
+        // ponytail: verified placement re-solves the whole puzzle per drop; campaign levels are
+        // tiny, so memoize solver state only if a level ever grows past a handful of entities.
+        if definition.movePolicy.placement == .verified,
+           try solutions(for: definition, seed: candidate, limit: 1).isEmpty
+        {
+            let charged = makeSession(
+                puzzleID: session.puzzleID,
+                initial: session.initialArrangement,
+                arrangement: session.arrangement,
+                moveCount: session.moveCount + 1,
+                history: session.history,
+                definition: definition
+            )
+            return PuzzleTransition(
+                session: charged,
+                outcome: .rejected(.contradictsClues(targetPositionID))
+            )
+        }
 
         let move = PuzzleMove(
             entityID: entityID,
@@ -421,7 +451,7 @@ public struct PuzzleEngine: Sendable {
         let nextSession = makeSession(
             puzzleID: session.puzzleID,
             initial: session.initialArrangement,
-            arrangement: PuzzleArrangement(occupantsByPosition: occupants),
+            arrangement: candidate,
             moveCount: session.moveCount + 1,
             history: session.history + [move],
             definition: definition
@@ -497,6 +527,8 @@ public struct PuzzleEngine: Sendable {
                     stars: definition.starThresholds.rating(for: moveCount)
                 )
             )
+        } else if let moveLimit = definition.movePolicy.moveLimit, moveCount >= moveLimit {
+            status = .failed
         } else {
             status = .inProgress
         }

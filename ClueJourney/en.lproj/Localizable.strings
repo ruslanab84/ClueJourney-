@@ -1,4 +1,21 @@
-"app.name" = "Clue Journey";
+"app.name" = "Puzzle Passport";
+"launch.tagline" = "TRAVEL. SOLVE. EXPLORE.";
+"launch.description" = "Solve fun logic puzzles at amazing destinations around the world!";
+"launch.play" = "PLAY";
+"launch.restore" = "Restore Progress";
+
+"destinations.title" = "CHOOSE YOUR DESTINATION";
+"destinations.moreSoon" = "More destinations are being prepared";
+"destinations.locked" = "Locked";
+"nav.destinations" = "Destinations";
+"nav.passport" = "Passport";
+
+"city.reward" = "Country reward";
+"city.rewardDescription" = "Solve Rome’s puzzle and collect every star.";
+
+"preview.title" = "Puzzle Preview";
+"preview.level" = "Level 1";
+"preview.start" = "Start Puzzle";
 "journey.title" = "Clue Journey";
 "journey.subtitle" = "Follow the trail. Solve the scene. Discover the story.";
 "journey.destination" = "Destination";
@@ -9,10 +26,16 @@
 "country.it.description" = "Follow a trail of clues through remarkable Italian places, one carefully observed scene at a time.";
 "country.it.action" = "Travel to Rome";
 
+"country.fr.name" = "France";
+"country.gb.name" = "United Kingdom";
+
 "city.rome.name" = "Rome";
 "city.rome.tagline" = "The Eternal City";
 "city.rome.description" = "Ancient streets, grand stages and small details are waiting to be noticed.";
 "city.rome.action" = "Visit the theatre";
+
+"city.paris.name" = "Paris";
+"city.london.name" = "London";
 
 "location.teatro-opera.name" = "Teatro dell’Opera";
 "location.teatro-opera.description" = "Take your seat inside Rome’s historic opera house and use the clues to arrange the audience.";
@@ -49,9 +72,16 @@
 "puzzle.undo" = "Undo";
 "puzzle.hint" = "Hint";
 "puzzle.restart" = "Restart";
+"puzzle.actions" = "Puzzle actions";
 "puzzle.clue.satisfied" = "Satisfied";
 "puzzle.clue.violated" = "Not satisfied";
 "puzzle.clue.unresolved" = "Not resolved yet";
+"puzzle.refused" = "Refused the seat";
+"puzzle.refused.badge" = "?!#@";
+"puzzle.outOfMoves.title" = "OUT OF MOVES";
+"puzzle.outOfMoves.body" = "The guests have run out of patience. Restart the scene and use the clues before you seat anyone.";
+"puzzle.outOfMoves.retry" = "Restart the scene";
+"puzzle.outOfMoves.leave" = "Leave the theatre";
 
 "completion.title" = "Case solved";
 "completion.subtitle" = "The audience is seated and the curtain can rise.";
@@ -75,3 +105,4 @@
 "Ready" = "Ready";
 "Moves" = "Moves";
 "Stars" = "Stars";
+"Back" = "Back";

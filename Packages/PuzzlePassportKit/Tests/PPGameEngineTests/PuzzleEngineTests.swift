@@ -199,6 +199,77 @@ struct PuzzleEngineTests {
 
         #expect(try engine.hint(for: wrong, in: definition) == .forcedPlacement(entity: .a, position: .p0))
     }
+
+    @Test("Verified placement refuses a seat no solution can reach and still spends a move")
+    func verifiedPlacementRefusesAndCharges() throws {
+        let definition = verifiedDefinition(moveLimit: 5)
+        let session = try engine.start(definition)
+
+        let refused = try engine.apply(.place(entity: .a, at: .p1), to: session, in: definition)
+
+        #expect(refused.outcome == .rejected(.contradictsClues(.p1)))
+        #expect(refused.session.arrangement == session.arrangement)
+        #expect(refused.session.history.isEmpty)
+        #expect(refused.session.moveCount == 1)
+        #expect(refused.session.status == .inProgress)
+    }
+
+    @Test("Verified placement seats an entity the solution agrees with")
+    func verifiedPlacementSeatsCorrectEntity() throws {
+        let definition = verifiedDefinition(moveLimit: 5)
+        let session = try engine.start(definition)
+
+        let seated = try engine.apply(.place(entity: .a, at: .p0), to: session, in: definition)
+
+        #expect(seated.session.arrangement.entity(at: .p0) == .a)
+        #expect(seated.session.moveCount == 1)
+        #expect(seated.session.history.count == 1)
+    }
+
+    @Test("Free placement still accepts a seat that contradicts the clues")
+    func freePlacementAcceptsContradiction() throws {
+        let definition = completionDefinition()
+        let session = try engine.start(definition)
+
+        let transition = try engine.apply(.place(entity: .c, at: .p0), to: session, in: definition)
+
+        #expect(transition.session.arrangement.entity(at: .p0) == .c)
+        #expect(transition.session.moveCount == 1)
+    }
+
+    @Test("Spending the authored budget fails the session and closes the board")
+    func exhaustedBudgetFailsSession() throws {
+        let definition = verifiedDefinition(moveLimit: 2)
+        let session = try engine.start(definition)
+
+        let first = try engine.apply(.place(entity: .a, at: .p1), to: session, in: definition)
+        let second = try engine.apply(.place(entity: .a, at: .p2), to: first.session, in: definition)
+        let afterFailure = try engine.apply(
+            .place(entity: .a, at: .p0),
+            to: second.session,
+            in: definition
+        )
+
+        #expect(second.session.status == .failed)
+        #expect(afterFailure.outcome == .rejected(.sessionFailed))
+        #expect(afterFailure.session.arrangement == session.arrangement)
+        #expect(afterFailure.session.moveCount == 2)
+    }
+
+    @Test("A budget is only spent by refusals and moves, never by blocked attempts")
+    func blockedAttemptsSpendNothing() throws {
+        let definition = verifiedDefinition(moveLimit: 3)
+        let session = try engine.start(definition)
+
+        let unknown = try engine.apply(
+            .place(entity: .a, at: PositionID("missing")),
+            to: session,
+            in: definition
+        )
+
+        #expect(unknown.outcome == .rejected(.unknownPosition(PositionID("missing"))))
+        #expect(unknown.session.moveCount == 0)
+    }
 }
 
 private extension PuzzleEngineTests {
@@ -239,6 +310,33 @@ private extension PuzzleEngineTests {
             movePolicy: MovePolicy(occupiedDrop: occupiedDrop),
             starThresholds: StarThresholds(
                 threeStarMaximumMoves: 2,
+                twoStarMaximumMoves: 4
+            )
+        )
+    }
+
+    /// One seat per entity, so every seat but the authored one refuses its guest.
+    func verifiedDefinition(moveLimit: Int) -> PuzzleDefinition {
+        PuzzleDefinition(
+            id: PuzzleID("test.verified"),
+            entities: [PuzzleEntity(id: .a), PuzzleEntity(id: .b), PuzzleEntity(id: .c)],
+            positions: [
+                position(.p0, row: 0, column: 0),
+                position(.p1, row: 0, column: 1),
+                position(.p2, row: 0, column: 2),
+            ],
+            constraints: [
+                .assigned(entity: .a, position: .p0),
+                .assigned(entity: .b, position: .p1),
+                .assigned(entity: .c, position: .p2),
+            ],
+            movePolicy: MovePolicy(
+                occupiedDrop: .swap,
+                placement: .verified,
+                moveLimit: moveLimit
+            ),
+            starThresholds: StarThresholds(
+                threeStarMaximumMoves: 3,
                 twoStarMaximumMoves: 4
             )
         )

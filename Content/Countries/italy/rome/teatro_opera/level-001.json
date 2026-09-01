@@ -57,7 +57,9 @@
       "threeStarThreshold": 3,
       "twoStarThreshold": 5,
       "undoCountsAsMove": false,
-      "occupiedDropPolicy": "swap"
+      "occupiedDropPolicy": "swap",
+      "placementPolicy": "verified",
+      "moveLimit": 7
     }
   }
 }

@@ -53,6 +53,8 @@ public struct PuzzleCompletionResult: Hashable, Codable, Sendable {
 public enum PuzzleSessionStatus: Hashable, Codable, Sendable {
     case inProgress
     case completed(PuzzleCompletionResult)
+    /// The authored move budget ran out before the arrangement was complete.
+    case failed
 }
 
 public struct PuzzleSession: Hashable, Codable, Sendable {

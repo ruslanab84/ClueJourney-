@@ -12,6 +12,14 @@ public enum JourneyRoute: Hashable {
     case discovery(FactID)
 }
 
+/// A refused placement, carried to the view so it can play the reaction.
+/// `attempt` rises on every refusal so repeat refusals at the same seat animate again.
+public struct RefusedPlacement: Hashable, Sendable {
+    public let entityID: EntityID
+    public let positionID: PositionID
+    public let attempt: Int
+}
+
 @MainActor
 @Observable
 public final class JourneyFlowModel {
@@ -20,9 +28,12 @@ public final class JourneyFlowModel {
     public private(set) var clueEvaluations: [ConstraintEvaluation] = []
     public private(set) var completion: CompletionOutcome?
     public private(set) var hintedEntityID: EntityID?
+    public private(set) var refusal: RefusedPlacement?
     public private(set) var isLoading = false
     public private(set) var errorMessage: String?
     public var selectedEntityID: EntityID?
+
+    private var refusalCount = 0
 
     private let journey: PuzzleJourney
 
@@ -84,9 +95,21 @@ public final class JourneyFlowModel {
             let updated = update.experience
             self.experience = updated
             clueEvaluations = await journey.evaluateClues(in: updated)
+            errorMessage = nil
+            // The character bounces back to the tray on a refusal, so the selection always clears.
             selectedEntityID = nil
             hintedEntityID = nil
-            errorMessage = nil
+
+            if update.feedback == .refused {
+                refusalCount += 1
+                refusal = RefusedPlacement(
+                    entityID: entityID,
+                    positionID: positionID,
+                    attempt: refusalCount
+                )
+                return false
+            }
+            refusal = nil
 
             guard let outcome = update.completion, completion == nil else {
                 return false
@@ -110,7 +133,20 @@ public final class JourneyFlowModel {
         completion = nil
         selectedEntityID = nil
         hintedEntityID = nil
+        refusal = nil
         await applyNonCompleting(.restart)
+    }
+
+    /// Moves left in the authored budget, or `nil` when the level is unbudgeted.
+    public var remainingMoves: Int? {
+        guard let experience,
+              let limit = experience.level.puzzle.movePolicy.moveLimit
+        else { return nil }
+        return max(0, limit - experience.session.moveCount)
+    }
+
+    public var isOutOfMoves: Bool {
+        experience?.session.status == .failed
     }
 
     public func requestHint() async {
@@ -144,7 +180,7 @@ public final class JourneyFlowModel {
     private func applyNonCompleting(_ action: PuzzleAction) async {
         guard let experience else { return }
         do {
-            let updated = try await journey.apply(action, to: experience)
+            let updated = try await journey.apply(action, to: experience).experience
             self.experience = updated
             clueEvaluations = await journey.evaluateClues(in: updated)
             errorMessage = nil
@@ -157,6 +193,7 @@ public final class JourneyFlowModel {
 public struct JourneyFlowView: View {
     @State private var model: JourneyFlowModel
     @State private var path: [JourneyRoute] = []
+    @State private var hasStarted = false
 
     public init(journey: PuzzleJourney) {
         _model = State(initialValue: JourneyFlowModel(journey: journey))
@@ -166,11 +203,16 @@ public struct JourneyFlowView: View {
         NavigationStack(path: $path) {
             Group {
                 if let level = model.snapshot?.levels.first {
-                    JourneyScreen(
-                        level: level,
-                        progress: model.snapshot?.progress.levels[level.id],
-                        onOpen: { path.append(.country(level.countryID)) }
-                    )
+                    if hasStarted {
+                        PassportDestinationScreen(
+                            level: level,
+                            progress: model.snapshot?.progress.levels[level.id],
+                            discoveredFacts: model.snapshot?.progress.discoveredFactIDs.count ?? 0,
+                            onOpen: { path.append(.city(level.cityID)) }
+                        )
+                    } else {
+                        PassportLaunchScreen { hasStarted = true }
+                    }
                 } else if model.isLoading {
                     ProgressView()
                         .controlSize(.large)
@@ -205,18 +247,21 @@ public struct JourneyFlowView: View {
         if let level = model.snapshot?.levels.first {
             switch route {
             case .country:
-                CountryScreen(level: level) {
-                    path.append(.city(level.cityID))
-                }
+                PassportDestinationScreen(
+                    level: level,
+                    progress: model.snapshot?.progress.levels[level.id],
+                    discoveredFacts: model.snapshot?.progress.discoveredFactIDs.count ?? 0,
+                    onOpen: { path.append(.city(level.cityID)) }
+                )
             case .city:
-                CityScreen(
+                RomeOverviewScreen(
                     level: level,
                     progress: model.snapshot?.progress.levels[level.id]
                 ) {
                     path.append(.location(level.locationID))
                 }
             case .location:
-                VenueScreen(level: level) {
+                PuzzlePreviewScreen(level: level) {
                     Task {
                         if await model.start(levelID: level.id) {
                             path.append(.puzzle(level.id))
@@ -224,7 +269,7 @@ public struct JourneyFlowView: View {
                     }
                 }
             case .puzzle:
-                PuzzleScreen(model: model) {
+                PassportPuzzleScreen(model: model) {
                     path.append(.completion(level.id))
                 }
             case .completion:
@@ -236,7 +281,8 @@ public struct JourneyFlowView: View {
             case .discovery:
                 if let completion = model.completion {
                     DiscoveryScreen(fact: completion.fact) {
-                        path = [.country(level.countryID), .city(level.cityID)]
+                        hasStarted = true
+                        path = [.city(level.cityID)]
                     }
                 }
             }

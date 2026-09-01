@@ -42,6 +42,6 @@ Journey → Italy → Rome → Roman Theatre → Puzzle
         → Completion → Did You Know → progress saved
 ```
 
-The first slice contains one data-driven Theatre level. Locked characters cannot move or be displaced; movable characters may place or swap according to `MovePolicy`. Cancelled, invalid, and same-position drops do not count as moves. Undo restores the previous arrangement and restart restores authored state. Completion and clue feedback come from `PPGameEngine`.
+The first slice contains one data-driven Theatre level. Locked characters cannot move or be displaced; movable characters may place or swap according to `MovePolicy`. Cancelled, structurally impossible, and same-position drops do not count as moves. Under the authored `verified` placement policy a drop that no solution can extend is refused — the board does not change, but the attempt spends a move, and spending the authored `moveLimit` before the arrangement is complete fails the attempt. Undo restores the previous arrangement and restart restores authored state; presentation hides undo on budgeted levels because a refused move cannot be refunded. Completion and clue feedback come from `PPGameEngine`.
 
 Drag must have an accessible tap-to-place alternative. Discovery and level progress are saved before the Did You Know screen is presented. Do not add other countries, stores, SDK adapters, or puzzle families until this path is green and the shared engine boundary is proven.

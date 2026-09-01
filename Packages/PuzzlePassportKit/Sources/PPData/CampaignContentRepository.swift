@@ -142,6 +142,9 @@ private struct LevelDTO: Decodable {
         else {
             throw CampaignContentError.invalidReference("Level metadata must not be empty")
         }
+        if let moveLimit = puzzle.movePolicy.moveLimit, moveLimit < 1 {
+            throw CampaignContentError.invalidReference("moveLimit must be at least 1")
+        }
         let levelID = LevelID(id)
         let entities = puzzle.entities.map { PuzzleEntity(id: EntityID($0.id)) }
         let positions = puzzle.positions.map {
@@ -167,7 +170,9 @@ private struct LevelDTO: Decodable {
                 occupiedDrop: puzzle.movePolicy.occupiedDropPolicy,
                 undoScoring: puzzle.movePolicy.undoCountsAsMove
                     ? .countsAsMove
-                    : .restoresPreviousMoveCount
+                    : .restoresPreviousMoveCount,
+                placement: puzzle.movePolicy.placementPolicy ?? .free,
+                moveLimit: puzzle.movePolicy.moveLimit
             ),
             starThresholds: StarThresholds(
                 threeStarMaximumMoves: puzzle.movePolicy.threeStarThreshold,
@@ -287,6 +292,10 @@ private struct MovePolicyDTO: Decodable {
     let twoStarThreshold: Int
     let undoCountsAsMove: Bool
     let occupiedDropPolicy: OccupiedDropPolicy
+    /// Absent means the historical behaviour: any structurally legal placement is accepted.
+    let placementPolicy: PlacementPolicy?
+    /// Absent means an unbudgeted level.
+    let moveLimit: Int?
 }
 
 private struct FactDTO: Decodable {

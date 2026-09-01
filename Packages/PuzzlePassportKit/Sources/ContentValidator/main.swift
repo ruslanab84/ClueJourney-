@@ -48,6 +48,7 @@ struct ContentValidator {
             guard solutionCount == 1 else {
                 throw ValidationError.solutionCount(level.id.rawValue, solutionCount)
             }
+            try validateMoveBudget(level, engine: engine)
         }
 
         for fact in facts where !localizationKeys.contains(fact.titleKey)
@@ -57,6 +58,34 @@ struct ContentValidator {
         }
 
         print("Validated \(levels.count) level(s) and \(facts.count) fact(s).")
+    }
+
+    /// A verified level must be budgeted, and no budget may be tighter than the level's own
+    /// star thresholds or than the number of placements its single solution actually requires.
+    private static func validateMoveBudget(_ level: CampaignLevel, engine: PuzzleEngine) throws {
+        let policy = level.puzzle.movePolicy
+        guard let moveLimit = policy.moveLimit else {
+            guard policy.placement == .free else {
+                throw ValidationError.missingMoveLimit(level.id.rawValue)
+            }
+            return
+        }
+        guard moveLimit >= level.puzzle.starThresholds.twoStarMaximumMoves else {
+            throw ValidationError.moveBudget(level.id.rawValue, moveLimit)
+        }
+        guard let solution = try engine.solution(for: level.puzzle) else { return }
+        let initial = PuzzleArrangement(
+            occupantsByPosition: Dictionary(
+                uniqueKeysWithValues: level.puzzle.initialAssignments
+                    .map { ($0.positionID, $0.entityID) }
+            )
+        )
+        let requiredMoves = level.puzzle.entities.count {
+            initial.position(of: $0.id) != solution.position(of: $0.id)
+        }
+        guard moveLimit >= requiredMoves else {
+            throw ValidationError.moveBudget(level.id.rawValue, moveLimit)
+        }
     }
 
     private static func contentRoot(from arguments: [String]) throws -> URL {
@@ -95,6 +124,8 @@ private enum ValidationError: Error, CustomStringConvertible {
     case invalidLocalizationFile
     case missingLocalization(String)
     case solutionCount(String, Int)
+    case missingMoveLimit(String)
+    case moveBudget(String, Int)
 
     var description: String {
         switch self {
@@ -112,6 +143,10 @@ private enum ValidationError: Error, CustomStringConvertible {
             "Content \(id) references a missing localization key."
         case .solutionCount(let id, let count):
             "Level \(id) has \(count) solutions; expected exactly one."
+        case .missingMoveLimit(let id):
+            "Level \(id) uses verified placement and must declare a moveLimit."
+        case .moveBudget(let id, let limit):
+            "Level \(id) has a moveLimit of \(limit) that its thresholds or solution cannot meet."
         }
     }
 }

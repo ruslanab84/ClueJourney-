@@ -52,6 +52,18 @@ public struct CompletionOutcome: Sendable {
     }
 }
 
+/// How a placement attempt resolved, in vocabulary presentation can use without importing the engine.
+public enum PlacementFeedback: Hashable, Sendable {
+    /// The character took the seat.
+    case seated
+    /// The seat contradicts the clues: nothing moved, but the attempt spent a move.
+    case refused
+    /// The attempt was structurally impossible (locked or occupied seat) and spent nothing.
+    case blocked
+    /// Nothing to react to: an undo, a restart, or a drop that changed nothing.
+    case ignored
+}
+
 public enum PuzzleJourneyError: Error, Sendable {
     case puzzleNotCompleted
     case puzzleIDMismatch
@@ -87,24 +99,44 @@ public actor PuzzleJourney {
     public func apply(
         _ action: PuzzleAction,
         to experience: PuzzleExperience
-    ) throws -> PuzzleExperience {
+    ) throws -> (experience: PuzzleExperience, feedback: PlacementFeedback) {
         let transition = try engine.apply(
             action,
             to: experience.session,
             in: experience.level.puzzle
         )
-        return PuzzleExperience(level: experience.level, session: transition.session)
+        return (
+            PuzzleExperience(level: experience.level, session: transition.session),
+            feedback(for: transition.outcome)
+        )
     }
 
     public func advance(
         _ action: PuzzleAction,
         from experience: PuzzleExperience
-    ) async throws -> (experience: PuzzleExperience, completion: CompletionOutcome?) {
+    ) async throws -> (
+        experience: PuzzleExperience,
+        feedback: PlacementFeedback,
+        completion: CompletionOutcome?
+    ) {
         let updated = try apply(action, to: experience)
-        guard case .completed = updated.session.status else {
-            return (updated, nil)
+        guard case .completed = updated.experience.session.status else {
+            return (updated.experience, updated.feedback, nil)
         }
-        return (updated, try await complete(updated))
+        return (updated.experience, updated.feedback, try await complete(updated.experience))
+    }
+
+    private func feedback(for outcome: PuzzleTransitionOutcome) -> PlacementFeedback {
+        switch outcome {
+        case .moved:
+            .seated
+        case .rejected(.contradictsClues):
+            .refused
+        case .rejected:
+            .blocked
+        case .unchanged, .undone, .restarted:
+            .ignored
+        }
     }
 
     public func evaluateClues(in experience: PuzzleExperience) -> [ConstraintEvaluation] {

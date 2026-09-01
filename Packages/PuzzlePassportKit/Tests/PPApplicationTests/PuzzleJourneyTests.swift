@@ -38,6 +38,78 @@ struct PuzzleJourneyTests {
         #expect(await progressRepository.recordedFactID() == fact.id)
     }
 
+    @Test("A verified level reports refused and seated placements to presentation")
+    func verifiedPlacementFeedback() async throws {
+        let level = verifiedLevel()
+        let journey = try PuzzleJourney(
+            contentRepository: StubContentRepository(level: level, fact: testFact(for: level)),
+            progressRepository: RecordingProgressRepository()
+        )
+
+        let experience = try await journey.start(levelID: level.id)
+        let refused = try await journey.advance(
+            .place(entity: EntityID("guest"), at: PositionID("aisle")),
+            from: experience
+        )
+        let seated = try await journey.advance(
+            .place(entity: EntityID("guest"), at: PositionID("seat")),
+            from: refused.experience
+        )
+
+        #expect(refused.feedback == .refused)
+        #expect(refused.completion == nil)
+        #expect(refused.experience.session.moveCount == 1)
+        #expect(seated.feedback == .seated)
+        #expect(seated.experience.session.arrangement.entity(at: PositionID("seat")) == EntityID("guest"))
+    }
+
+    private func testFact(for level: CampaignLevel) throws -> TravelFact {
+        try TravelFact(
+            id: level.factID,
+            locationID: level.locationID,
+            titleKey: "fact.title",
+            bodyKey: "fact.body",
+            unlockLevelID: level.id,
+            source: FactSource(
+                title: "Source",
+                url: #require(URL(string: "https://example.com")),
+                accessed: "2026-09-01"
+            )
+        )
+    }
+
+    private func verifiedLevel() -> CampaignLevel {
+        let entityID = EntityID("guest")
+        let seatID = PositionID("seat")
+        let aisleID = PositionID("aisle")
+        let puzzle = PuzzleDefinition(
+            id: PuzzleID("test.verified"),
+            entities: [PuzzleEntity(id: entityID)],
+            positions: [
+                PuzzlePosition(id: seatID, coordinate: GridCoordinate(row: 0, column: 0)),
+                PuzzlePosition(id: aisleID, coordinate: GridCoordinate(row: 0, column: 1)),
+            ],
+            constraints: [.assigned(entity: entityID, position: seatID)],
+            movePolicy: MovePolicy(occupiedDrop: .swap, placement: .verified, moveLimit: 4),
+            starThresholds: StarThresholds(
+                threeStarMaximumMoves: 1,
+                twoStarMaximumMoves: 2
+            )
+        )
+        return CampaignLevel(
+            id: LevelID("test.verified"),
+            countryID: CountryID("test-country"),
+            cityID: CityID("test-city"),
+            locationID: LocationID("test-location"),
+            titleKey: "level.title",
+            factID: FactID("test.fact"),
+            boardStyle: .theatre,
+            entityNameKeys: [entityID: "guest.name"],
+            clueKeys: ["clue.one"],
+            puzzle: puzzle
+        )
+    }
+
     private func testLevel() -> CampaignLevel {
         let entityID = EntityID("guest")
         let positionID = PositionID("seat")
