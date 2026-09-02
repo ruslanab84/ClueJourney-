@@ -63,7 +63,9 @@ struct PassportLaunchScreen: View {
 
 struct PassportDestinationScreen: View {
     let level: CampaignLevel
-    let progress: LevelProgress?
+    let completedLevels: Int
+    let totalLevels: Int
+    let stars: Int
     let discoveredFacts: Int
     let onOpen: () -> Void
 
@@ -83,7 +85,7 @@ struct PassportDestinationScreen: View {
                         Spacer()
                         PPMetricPill(
                             symbol: "star.fill",
-                            value: progress?.bestStars.rawValue ?? 0
+                            value: stars
                         )
                         PPMetricPill(
                             symbol: "book.closed.fill",
@@ -103,7 +105,7 @@ struct PassportDestinationScreen: View {
                             imageName: "PPRomeHero",
                             cityName: ppLocalized("city.\(level.cityID.rawValue).name"),
                             countryName: ppLocalized("country.\(level.countryID.rawValue).name"),
-                            progressText: progress?.isCompleted == true ? "1/1" : "0/1",
+                            progressText: "\(completedLevels)/\(totalLevels)",
                             isLocked: false
                         )
                     }
@@ -214,9 +216,20 @@ private struct PassportDestinationRow: View {
 struct RomeOverviewScreen: View {
     @Environment(\.dismiss) private var dismiss
 
-    let level: CampaignLevel
-    let progress: LevelProgress?
-    let onOpen: () -> Void
+    let levels: [CampaignLevel]
+    let progress: [LevelID: LevelProgress]
+    let onOpen: (CampaignLevel) -> Void
+
+    private var orderedLevels: [CampaignLevel] {
+        levels.sorted {
+            if $0.boardStyle.displayOrder == $1.boardStyle.displayOrder {
+                return $0.id < $1.id
+            }
+            return $0.boardStyle.displayOrder < $1.boardStyle.displayOrder
+        }
+    }
+
+    private var firstLevel: CampaignLevel? { orderedLevels.first }
 
     var body: some View {
         ZStack {
@@ -226,10 +239,10 @@ struct RomeOverviewScreen: View {
                     HStack(alignment: .top) {
                         PPBackButton { dismiss() }
                         VStack(alignment: .leading, spacing: 0) {
-                            Text(ppLocalized("city.\(level.cityID.rawValue).name").uppercased())
+                            Text(ppLocalized("city.\(firstLevel?.cityID.rawValue ?? "rome").name").uppercased())
                                 .font(.title.weight(.black))
                                 .fontDesign(.rounded)
-                            Text(ppLocalized("country.\(level.countryID.rawValue).name").uppercased())
+                            Text(ppLocalized("country.\(firstLevel?.countryID.rawValue ?? "it").name").uppercased())
                                 .font(.headline.bold())
                                 .foregroundStyle(PPColor.teal)
                         }
@@ -254,38 +267,28 @@ struct RomeOverviewScreen: View {
                         }
                         .accessibilityHidden(true)
 
-                    Text(ppLocalized("city.\(level.cityID.rawValue).description"))
+                    Text(ppLocalized("city.\(firstLevel?.cityID.rawValue ?? "rome").description"))
                         .font(.headline)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal, PPSpacing.small)
 
-                    Button(action: onOpen) {
-                        HStack(spacing: PPSpacing.small) {
-                            Image("PPTheatreBoard", bundle: .main)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 78, height: 78)
-                                .clipShape(.circle)
-                                .overlay { Circle().stroke(PPColor.border, lineWidth: 1) }
-                            VStack(alignment: .leading, spacing: PPSpacing.xxSmall) {
-                                Text(ppLocalized("location.\(level.locationID.rawValue).name").uppercased())
-                                    .font(.subheadline.weight(.black))
-                                Text(ppLocalized("level.\(level.id.rawValue).summary"))
-                                    .font(.caption)
-                                    .foregroundStyle(PPColor.ink.opacity(0.7))
-                                    .multilineTextAlignment(.leading)
+                    VStack(spacing: PPSpacing.small) {
+                        ForEach(Array(orderedLevels.enumerated()), id: \.element.id) { index, level in
+                            let isUnlocked = isUnlocked(at: index)
+                            Button {
+                                if isUnlocked { onOpen(level) }
+                            } label: {
+                                RomeLocationRow(
+                                    level: level,
+                                    number: index + 1,
+                                    progress: progress[level.id],
+                                    isUnlocked: isUnlocked
+                                )
                             }
-                            Spacer()
-                            PPRewardStars(earned: progress?.bestStars.rawValue ?? 0)
+                            .buttonStyle(.plain)
+                            .disabled(!isUnlocked)
                         }
-                    }
-                    .buttonStyle(.plain)
-                    .padding(PPSpacing.small)
-                    .background(PPColor.surface, in: .rect(cornerRadius: PPRadius.card))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: PPRadius.card)
-                            .stroke(PPColor.border.opacity(0.78), lineWidth: 1)
                     }
 
                     PPPostcardCard {
@@ -311,6 +314,67 @@ struct RomeOverviewScreen: View {
         }
         .foregroundStyle(PPColor.ink)
         .ppHiddenNavigationBar()
+    }
+
+    private func isUnlocked(at index: Int) -> Bool {
+        guard index > 0 else { return true }
+        return progress[orderedLevels[index - 1].id]?.isCompleted == true
+    }
+}
+
+private struct RomeLocationRow: View {
+    let level: CampaignLevel
+    let number: Int
+    let progress: LevelProgress?
+    let isUnlocked: Bool
+
+    var body: some View {
+        HStack(spacing: PPSpacing.small) {
+            Image(level.boardStyle.artworkAssetName, bundle: .main)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 112, height: 88)
+                .clipShape(.rect(cornerRadius: PPRadius.small))
+                .saturation(isUnlocked ? 1 : 0.28)
+                .overlay {
+                    if !isUnlocked {
+                        PPColor.ink.opacity(0.16)
+                        Image(systemName: "lock.fill")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                    }
+                }
+
+            VStack(alignment: .leading, spacing: PPSpacing.xxSmall) {
+                Text(ppLocalized("location.\(level.locationID.rawValue).name").uppercased())
+                    .font(.subheadline.weight(.black))
+                    .lineLimit(2)
+                Text("\(ppLocalized("preview.level")) \(number)")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(PPColor.teal)
+                Text(ppLocalized("level.\(level.id.rawValue).summary"))
+                    .font(.caption2)
+                    .foregroundStyle(PPColor.ink.opacity(0.68))
+                    .lineLimit(2)
+            }
+            Spacer(minLength: 0)
+            if isUnlocked {
+                PPRewardStars(earned: progress?.bestStars.rawValue ?? 0)
+            } else {
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(PPColor.ink.opacity(0.3))
+            }
+        }
+        .padding(PPSpacing.xSmall)
+        .frame(maxWidth: .infinity, minHeight: 108)
+        .background(PPColor.surface, in: .rect(cornerRadius: PPRadius.card))
+        .overlay {
+            RoundedRectangle(cornerRadius: PPRadius.card)
+                .stroke(PPColor.border.opacity(0.78), lineWidth: 1)
+        }
+        .opacity(isUnlocked ? 1 : 0.82)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(Text(isUnlocked ? ppLocalized("Ready") : ppLocalized("destinations.locked")))
     }
 }
 
@@ -341,7 +405,7 @@ struct PuzzlePreviewScreen: View {
 
                     PPPostcardCard {
                         VStack(alignment: .leading, spacing: PPSpacing.medium) {
-                            Image("PPTheatreBoard", bundle: .main)
+                            Image(level.boardStyle.artworkAssetName, bundle: .main)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(maxWidth: .infinity)
@@ -353,7 +417,7 @@ struct PuzzlePreviewScreen: View {
                             Text(ppLocalized("level.\(level.id.rawValue).objective"))
                                 .foregroundStyle(PPColor.ink.opacity(0.72))
                             HStack {
-                                Text(ppLocalized("preview.level"))
+                                Text("\(ppLocalized("preview.level")) \(level.boardStyle.displayOrder + 1)")
                                     .font(.subheadline.bold())
                                     .foregroundStyle(PPColor.teal)
                                 Spacer()
@@ -373,6 +437,30 @@ struct PuzzlePreviewScreen: View {
         }
         .foregroundStyle(PPColor.ink)
         .ppHiddenNavigationBar()
+    }
+}
+
+extension PuzzleBoardStyle {
+    var artworkAssetName: String {
+        switch self {
+        case .theatre: "PPTheatreBoard"
+        case .standing: "PPRomeHero"
+        case .aircraft: "PPAircraftBoard"
+        case .restaurant: "PPRestaurantBoard"
+        case .grouping: "PPColosseumBoard"
+        case .route: "PPRomeHero"
+        }
+    }
+
+    var displayOrder: Int {
+        switch self {
+        case .theatre: 0
+        case .standing: 1
+        case .aircraft: 2
+        case .restaurant: 3
+        case .grouping: 4
+        case .route: 5
+        }
     }
 }
 

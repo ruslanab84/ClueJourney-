@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "fact.it.rome.colosseum.005",
+  "locationID": "colosseum",
+  "titleKey": "fact.it.rome.colosseum.005.title",
+  "bodyKey": "fact.it.rome.colosseum.005.body",
+  "unlockLevelID": "it.rome.colosseum.005",
+  "source": {
+    "title": "The Colosseum — Parco archeologico del Colosseo",
+    "url": "https://colosseo.it/en/area/the-colosseum/",
+    "accessed": "2026-09-02"
+  }
+}

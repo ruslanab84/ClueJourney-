@@ -41,4 +41,12 @@ The final comparison confirms the same five-part journey and primary hierarchy a
 
 - [P3] The source concept board depicts many destinations and levels; the app intentionally shows only its single JSON-authored Rome theatre level. Add future destinations through campaign content, not hardcoded SwiftUI rows.
 
-final result: passed
+## Rome locations expansion — 2026-09-02
+
+- Visual target: `IMG_6780.jpeg` and `IMG_6781.jpeg`, supplied as references for the set of scene types.
+- Implemented surfaces: Rome location list, per-location preview artwork, sequential unlock state, and board artwork selection.
+- Original artwork added for the aircraft, trattoria, and Colosseum. The existing original Rome/Trevi and theatre artwork is reused for the remaining scenes.
+- Static checks passed: JSON syntax, asset-catalog JSON syntax, unique IDs, fact back-references, localization coverage, and exactly one logical solution for each of five levels.
+- Runtime comparison is blocked because this execution environment does not include Swift, Xcode, an iOS Simulator, or the cloud browser route needed to render this native app.
+
+final result: blocked

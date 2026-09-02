@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "fact.it.rome.trevi-fountain.002",
+  "locationID": "trevi-fountain",
+  "titleKey": "fact.it.rome.trevi-fountain.002.title",
+  "bodyKey": "fact.it.rome.trevi-fountain.002.body",
+  "unlockLevelID": "it.rome.trevi-fountain.002",
+  "source": {
+    "title": "The Trevi Fountain — Turismo Roma",
+    "url": "https://www.turismoroma.it/en/places/trevi-fountain",
+    "accessed": "2026-09-02"
+  }
+}

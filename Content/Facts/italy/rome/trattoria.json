@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "fact.it.rome.trattoria.004",
+  "locationID": "trattoria",
+  "titleKey": "fact.it.rome.trattoria.004.title",
+  "bodyKey": "fact.it.rome.trattoria.004.body",
+  "unlockLevelID": "it.rome.trattoria.004",
+  "source": {
+    "title": "Traditional cuisine — Turismo Roma",
+    "url": "https://www.turismoroma.it/en/page/traditional-cuisine",
+    "accessed": "2026-09-02"
+  }
+}

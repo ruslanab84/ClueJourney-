@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "it.rome.colosseum.005",
+  "countryID": "it",
+  "cityID": "rome",
+  "locationID": "colosseum",
+  "titleKey": "level.it.rome.colosseum.005.title",
+  "factID": "fact.it.rome.colosseum.005",
+  "presentation": { "boardStyle": "grouping" },
+  "puzzle": {
+    "family": "position",
+    "capabilities": ["spatialPositioning", "swap", "undo"],
+    "entities": [
+      { "id": "livia", "nameKey": "character.livia" },
+      { "id": "marco", "nameKey": "character.marco" },
+      { "id": "sara", "nameKey": "character.sara" },
+      { "id": "tomas", "nameKey": "character.tomas" }
+    ],
+    "positions": [
+      { "id": "tour.1", "row": 0, "column": 0, "group": "arena" },
+      { "id": "tour.2", "row": 0, "column": 1, "group": "arena" },
+      { "id": "tour.3", "row": 0, "column": 2, "group": "arena" },
+      { "id": "tour.4", "row": 0, "column": 3, "group": "arena" }
+    ],
+    "initialAssignments": [],
+    "constraints": [
+      { "type": "fixedAssignment", "subjectID": "tomas", "positionID": "tour.1", "clueKey": "clue.it.rome.colosseum.005.01" },
+      { "type": "immediatelyLeftOf", "subjectID": "livia", "relatedID": "marco", "clueKey": "clue.it.rome.colosseum.005.02" },
+      { "type": "immediatelyLeftOf", "subjectID": "marco", "relatedID": "sara", "clueKey": "clue.it.rome.colosseum.005.03" }
+    ],
+    "movePolicy": {
+      "threeStarThreshold": 4,
+      "twoStarThreshold": 6,
+      "undoCountsAsMove": false,
+      "occupiedDropPolicy": "swap",
+      "placementPolicy": "verified",
+      "moveLimit": 8
+    }
+  }
+}

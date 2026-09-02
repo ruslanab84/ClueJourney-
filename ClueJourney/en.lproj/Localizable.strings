@@ -11,10 +11,10 @@
 "nav.passport" = "Passport";
 
 "city.reward" = "Country reward";
-"city.rewardDescription" = "Solve Rome’s puzzle and collect every star.";
+"city.rewardDescription" = "Solve every Rome puzzle and collect every star.";
 
 "preview.title" = "Puzzle Preview";
-"preview.level" = "Level 1";
+"preview.level" = "Level";
 "preview.start" = "Start Puzzle";
 "journey.title" = "Clue Journey";
 "journey.subtitle" = "Follow the trail. Solve the scene. Discover the story.";
@@ -41,9 +41,37 @@
 "location.teatro-opera.description" = "Take your seat inside Rome’s historic opera house and use the clues to arrange the audience.";
 "location.teatro-opera.action" = "Begin the puzzle";
 
+"location.trevi-fountain.name" = "Trevi Fountain";
+"location.trevi-fountain.description" = "Arrange travellers along the fountain terrace using position clues.";
+"location.trevi-fountain.action" = "Visit the fountain";
+
+"location.fiumicino-flight.name" = "Flight to Rome";
+"location.fiumicino-flight.description" = "Find every passenger’s seat before the flight reaches Rome.";
+"location.fiumicino-flight.action" = "Board the flight";
+
+"location.trattoria.name" = "Roman Trattoria";
+"location.trattoria.description" = "Seat four friends around a welcoming Roman table.";
+"location.trattoria.action" = "Reserve the table";
+
+"location.colosseum.name" = "Colosseum";
+"location.colosseum.description" = "Arrange the visitors in the right order inside Rome’s ancient amphitheatre.";
+"location.colosseum.action" = "Enter the arena";
+
 "level.it.rome.teatro-opera.001.title" = "Opening Night";
 "level.it.rome.teatro-opera.001.summary" = "Arrange four guests before the curtain rises.";
 "level.it.rome.teatro-opera.001.objective" = "Seat every guest so all three clues are true.";
+"level.it.rome.trevi-fountain.002.title" = "Coins and Clues";
+"level.it.rome.trevi-fountain.002.summary" = "Line up four travellers beside the fountain.";
+"level.it.rome.trevi-fountain.002.objective" = "Place every traveller so all three fountain clues are true.";
+"level.it.rome.fiumicino-flight.003.title" = "Final Boarding";
+"level.it.rome.fiumicino-flight.003.summary" = "Seat four passengers for the flight to Rome.";
+"level.it.rome.fiumicino-flight.003.objective" = "Place every passenger in the correct aircraft seat.";
+"level.it.rome.trattoria.004.title" = "Table for Four";
+"level.it.rome.trattoria.004.summary" = "Arrange four friends around a trattoria table.";
+"level.it.rome.trattoria.004.objective" = "Seat every friend so all four table clues are true.";
+"level.it.rome.colosseum.005.title" = "Arena Tour";
+"level.it.rome.colosseum.005.summary" = "Order four visitors for a Colosseum tour.";
+"level.it.rome.colosseum.005.objective" = "Place every visitor so all three tour clues are true.";
 "level.completed" = "Discovery unlocked";
 
 "character.livia" = "Livia";
@@ -54,6 +82,20 @@
 "clue.it.rome.teatro-opera.001.01" = "Marco sits somewhere to the left of Sara in the same row.";
 "clue.it.rome.teatro-opera.001.02" = "Tomas sits somewhere to the right of Livia in the same row.";
 "clue.it.rome.teatro-opera.001.03" = "Livia’s reserved seat is the back-left chair.";
+"clue.it.rome.trevi-fountain.002.01" = "Livia stands somewhere to the left of Marco.";
+"clue.it.rome.trevi-fountain.002.02" = "Sara stands immediately to the left of Tomas.";
+"clue.it.rome.trevi-fountain.002.03" = "Marco stands immediately to the left of Sara.";
+"clue.it.rome.fiumicino-flight.003.01" = "Marco has seat 1A.";
+"clue.it.rome.fiumicino-flight.003.02" = "Livia sits in the same row as Marco.";
+"clue.it.rome.fiumicino-flight.003.03" = "Tomas has seat 2A.";
+"clue.it.rome.fiumicino-flight.003.04" = "Sara has seat 2B.";
+"clue.it.rome.trattoria.004.01" = "Livia sits at the top-left place.";
+"clue.it.rome.trattoria.004.02" = "Sara sits at the top-right place.";
+"clue.it.rome.trattoria.004.03" = "Marco sits at the bottom-left place.";
+"clue.it.rome.trattoria.004.04" = "Tomas sits in the same row as Marco.";
+"clue.it.rome.colosseum.005.01" = "Tomas joins the first tour group.";
+"clue.it.rome.colosseum.005.02" = "Livia stands immediately to the left of Marco.";
+"clue.it.rome.colosseum.005.03" = "Marco stands immediately to the left of Sara.";
 
 "puzzle.logicChallenge" = "Logic challenge";
 "puzzle.title" = "Audience Puzzle";
@@ -79,12 +121,12 @@
 "puzzle.refused" = "Refused the seat";
 "puzzle.refused.badge" = "?!#@";
 "puzzle.outOfMoves.title" = "OUT OF MOVES";
-"puzzle.outOfMoves.body" = "The guests have run out of patience. Restart the scene and use the clues before you seat anyone.";
+"puzzle.outOfMoves.body" = "The travellers have run out of patience. Restart the scene and use the clues before placing anyone.";
 "puzzle.outOfMoves.retry" = "Restart the scene";
-"puzzle.outOfMoves.leave" = "Leave the theatre";
+"puzzle.outOfMoves.leave" = "Leave the puzzle";
 
 "completion.title" = "Case solved";
-"completion.subtitle" = "The audience is seated and the curtain can rise.";
+"completion.subtitle" = "Everyone is in the right place and the journey can continue.";
 "completion.reward" = "Journey stars";
 "completion.discover" = "Reveal the discovery";
 
@@ -92,6 +134,14 @@
 "discovery.done" = "Continue exploring";
 "fact.it.rome.teatro-opera.001.title" = "An opening night in 1880";
 "fact.it.rome.teatro-opera.001.body" = "Rome’s opera house was inaugurated on 27 November 1880 with Rossini’s Semiramide.";
+"fact.it.rome.trevi-fountain.002.title" = "Three streets meet at Trevi";
+"fact.it.rome.trevi-fountain.002.body" = "The fountain’s name is linked to the meeting of three streets in its square.";
+"fact.it.rome.fiumicino-flight.003.title" = "Rome’s main airport";
+"fact.it.rome.fiumicino-flight.003.body" = "Leonardo da Vinci–Fiumicino Airport is about 26 kilometres from central Rome.";
+"fact.it.rome.trattoria.004.title" = "Flavours from Rome’s neighbourhoods";
+"fact.it.rome.trattoria.004.body" = "Trastevere and Testaccio are among the Roman neighbourhoods known for traditional trattorias.";
+"fact.it.rome.colosseum.005.title" = "The world’s largest amphitheatre";
+"fact.it.rome.colosseum.005.body" = "The Colosseum was built in the first century CE and remains the world’s largest amphitheatre.";
 
 "error.content.title" = "Journey unavailable";
 "error.content.load" = "The campaign could not be loaded.";

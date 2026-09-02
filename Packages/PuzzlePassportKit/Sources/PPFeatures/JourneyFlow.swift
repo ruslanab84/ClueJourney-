@@ -202,12 +202,20 @@ public struct JourneyFlowView: View {
     public var body: some View {
         NavigationStack(path: $path) {
             Group {
-                if let level = model.snapshot?.levels.first {
+                if let level = model.snapshot?.levels.first,
+                   let snapshot = model.snapshot
+                {
                     if hasStarted {
                         PassportDestinationScreen(
                             level: level,
-                            progress: model.snapshot?.progress.levels[level.id],
-                            discoveredFacts: model.snapshot?.progress.discoveredFactIDs.count ?? 0,
+                            completedLevels: snapshot.progress.levels.values.reduce(0) {
+                                $0 + ($1.isCompleted ? 1 : 0)
+                            },
+                            totalLevels: snapshot.levels.count,
+                            stars: snapshot.progress.levels.values.reduce(0) {
+                                $0 + $1.bestStars.rawValue
+                            },
+                            discoveredFacts: snapshot.progress.discoveredFactIDs.count,
                             onOpen: { path.append(.city(level.cityID)) }
                         )
                     } else {
@@ -244,33 +252,45 @@ public struct JourneyFlowView: View {
 
     @ViewBuilder
     private func destination(for route: JourneyRoute) -> some View {
-        if let level = model.snapshot?.levels.first {
+        if let snapshot = model.snapshot,
+           let firstLevel = snapshot.levels.first
+        {
             switch route {
             case .country:
                 PassportDestinationScreen(
-                    level: level,
-                    progress: model.snapshot?.progress.levels[level.id],
-                    discoveredFacts: model.snapshot?.progress.discoveredFactIDs.count ?? 0,
-                    onOpen: { path.append(.city(level.cityID)) }
+                    level: firstLevel,
+                    completedLevels: snapshot.progress.levels.values.reduce(0) {
+                        $0 + ($1.isCompleted ? 1 : 0)
+                    },
+                    totalLevels: snapshot.levels.count,
+                    stars: snapshot.progress.levels.values.reduce(0) {
+                        $0 + $1.bestStars.rawValue
+                    },
+                    discoveredFacts: snapshot.progress.discoveredFactIDs.count,
+                    onOpen: { path.append(.city(firstLevel.cityID)) }
                 )
             case .city:
                 RomeOverviewScreen(
-                    level: level,
-                    progress: model.snapshot?.progress.levels[level.id]
-                ) {
-                    path.append(.location(level.locationID))
+                    levels: snapshot.levels.filter { $0.cityID == firstLevel.cityID },
+                    progress: snapshot.progress.levels
+                ) { selectedLevel in
+                    path.append(.location(selectedLevel.locationID))
                 }
-            case .location:
-                PuzzlePreviewScreen(level: level) {
-                    Task {
-                        if await model.start(levelID: level.id) {
-                            path.append(.puzzle(level.id))
+            case .location(let locationID):
+                if let level = snapshot.levels.first(where: { $0.locationID == locationID }) {
+                    PuzzlePreviewScreen(level: level) {
+                        Task {
+                            if await model.start(levelID: level.id) {
+                                path.append(.puzzle(level.id))
+                            }
                         }
                     }
                 }
-            case .puzzle:
-                PassportPuzzleScreen(model: model) {
-                    path.append(.completion(level.id))
+            case .puzzle(let levelID):
+                if model.experience?.level.id == levelID {
+                    PassportPuzzleScreen(model: model) {
+                        path.append(.completion(levelID))
+                    }
                 }
             case .completion:
                 if let completion = model.completion {
@@ -282,7 +302,7 @@ public struct JourneyFlowView: View {
                 if let completion = model.completion {
                     DiscoveryScreen(fact: completion.fact) {
                         hasStarted = true
-                        path = [.city(level.cityID)]
+                        path = [.city(firstLevel.cityID)]
                     }
                 }
             }
