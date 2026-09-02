@@ -42,18 +42,20 @@
 "location.teatro-opera.action" = "Begin the puzzle";
 
 "level.it.rome.teatro-opera.001.title" = "Opening Night";
-"level.it.rome.teatro-opera.001.summary" = "Arrange four guests before the curtain rises.";
-"level.it.rome.teatro-opera.001.objective" = "Seat every guest so all three clues are true.";
+"level.it.rome.teatro-opera.001.summary" = "Arrange five guests before the curtain rises.";
+"level.it.rome.teatro-opera.001.objective" = "Seat every guest so all four clues are true.";
 "level.completed" = "Discovery unlocked";
 
 "character.livia" = "Livia";
 "character.marco" = "Marco";
 "character.sara" = "Sara";
 "character.tomas" = "Tomas";
+"character.elena" = "Elena";
 
 "clue.it.rome.teatro-opera.001.01" = "Marco sits somewhere to the left of Sara in the same row.";
 "clue.it.rome.teatro-opera.001.02" = "Tomas sits somewhere to the right of Livia in the same row.";
 "clue.it.rome.teatro-opera.001.03" = "Livia’s reserved seat is the back-left chair.";
+"clue.it.rome.teatro-opera.001.04" = "Elena’s reserved seat is the front-center chair.";
 
 "puzzle.logicChallenge" = "Logic challenge";
 "puzzle.title" = "Audience Puzzle";

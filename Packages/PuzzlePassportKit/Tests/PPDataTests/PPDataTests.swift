@@ -1,4 +1,5 @@
 import Foundation
+import PPApplication
 import PPData
 import PPDomain
 import Testing
@@ -17,6 +18,43 @@ struct PPDataTests {
         #expect(levels[0].factID == facts[0].id)
         #expect(levels[0].puzzle.movePolicy.placement == .verified)
         #expect(levels[0].puzzle.movePolicy.moveLimit == 7)
+        #expect(levels[0].puzzle.entities.count == 5)
+        #expect(levels[0].puzzle.positions.count == 5)
+        #expect(levels[0].entityNameKeys[EntityID("elena")] == "character.elena")
+        #expect(levels[0].puzzle.starThresholds.threeStarMaximumMoves == 4)
+    }
+
+    @Test("Authored easy level accepts the four correct avatar drops")
+    func easyLevelAcceptsCorrectAvatarDrops() async throws {
+        let contentRepository = CampaignContentRepository(rootURL: contentRoot)
+        let progressRepository = try SwiftDataProgressRepository(isStoredInMemoryOnly: true)
+        let journey = PuzzleJourney(
+            contentRepository: contentRepository,
+            progressRepository: progressRepository
+        )
+        let level = try #require(try await contentRepository.levels().first)
+        var experience = try await journey.start(levelID: level.id)
+
+        for (entity, position) in [
+            ("tomas", "seat.back.right"),
+            ("elena", "seat.front.center"),
+            ("marco", "seat.front.left"),
+            ("sara", "seat.front.right"),
+        ] {
+            let update = try await journey.apply(
+                .place(entity: EntityID(entity), at: PositionID(position)),
+                to: experience
+            )
+            #expect(update.feedback == .seated)
+            experience = update.experience
+        }
+
+        guard case .completed(let result) = experience.session.status else {
+            Issue.record("Expected the easy level to complete after four correct drops")
+            return
+        }
+        #expect(result.moveCount == 4)
+        #expect(result.stars == .three)
     }
 
     @Test("SwiftData keeps best progress and a single discovery")

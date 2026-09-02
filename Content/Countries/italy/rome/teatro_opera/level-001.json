@@ -21,11 +21,13 @@
       { "id": "livia", "nameKey": "character.livia" },
       { "id": "marco", "nameKey": "character.marco" },
       { "id": "sara", "nameKey": "character.sara" },
-      { "id": "tomas", "nameKey": "character.tomas" }
+      { "id": "tomas", "nameKey": "character.tomas" },
+      { "id": "elena", "nameKey": "character.elena" }
     ],
     "positions": [
       { "id": "seat.front.left", "row": 0, "column": 0, "group": "stalls" },
-      { "id": "seat.front.right", "row": 0, "column": 1, "group": "stalls" },
+      { "id": "seat.front.center", "row": 0, "column": 1, "group": "stalls" },
+      { "id": "seat.front.right", "row": 0, "column": 2, "group": "stalls" },
       { "id": "seat.back.left", "row": 1, "column": 0, "group": "stalls" },
       { "id": "seat.back.right", "row": 1, "column": 1, "group": "stalls" }
     ],
@@ -51,11 +53,17 @@
         "subjectID": "livia",
         "positionID": "seat.back.left",
         "clueKey": "clue.it.rome.teatro-opera.001.03"
+      },
+      {
+        "type": "fixedAssignment",
+        "subjectID": "elena",
+        "positionID": "seat.front.center",
+        "clueKey": "clue.it.rome.teatro-opera.001.04"
       }
     ],
     "movePolicy": {
-      "threeStarThreshold": 3,
-      "twoStarThreshold": 5,
+      "threeStarThreshold": 4,
+      "twoStarThreshold": 6,
       "undoCountsAsMove": false,
       "occupiedDropPolicy": "swap",
       "placementPolicy": "verified",
