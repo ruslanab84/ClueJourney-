@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "it.rome.trattoria.004",
+  "countryID": "it",
+  "cityID": "rome",
+  "locationID": "trattoria",
+  "titleKey": "level.it.rome.trattoria.004.title",
+  "factID": "fact.it.rome.trattoria.004",
+  "presentation": { "boardStyle": "restaurant" },
+  "puzzle": {
+    "family": "position",
+    "capabilities": ["spatialPositioning", "swap", "undo"],
+    "entities": [
+      { "id": "livia", "nameKey": "character.livia" },
+      { "id": "marco", "nameKey": "character.marco" },
+      { "id": "sara", "nameKey": "character.sara" },
+      { "id": "tomas", "nameKey": "character.tomas" }
+    ],
+    "positions": [
+      { "id": "place.nw", "row": 0, "column": 0, "group": "table" },
+      { "id": "place.ne", "row": 0, "column": 1, "group": "table" },
+      { "id": "place.sw", "row": 1, "column": 0, "group": "table" },
+      { "id": "place.se", "row": 1, "column": 1, "group": "table" }
+    ],
+    "initialAssignments": [],
+    "constraints": [
+      { "type": "fixedAssignment", "subjectID": "livia", "positionID": "place.nw", "clueKey": "clue.it.rome.trattoria.004.01" },
+      { "type": "fixedAssignment", "subjectID": "sara", "positionID": "place.ne", "clueKey": "clue.it.rome.trattoria.004.02" },
+      { "type": "fixedAssignment", "subjectID": "marco", "positionID": "place.sw", "clueKey": "clue.it.rome.trattoria.004.03" },
+      { "type": "sameRow", "subjectID": "tomas", "relatedID": "marco", "clueKey": "clue.it.rome.trattoria.004.04" }
+    ],
+    "movePolicy": {
+      "threeStarThreshold": 4,
+      "twoStarThreshold": 6,
+      "undoCountsAsMove": false,
+      "occupiedDropPolicy": "swap",
+      "placementPolicy": "verified",
+      "moveLimit": 8
+    }
+  }
+}

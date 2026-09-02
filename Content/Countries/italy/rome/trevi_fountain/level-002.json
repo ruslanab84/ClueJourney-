@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "it.rome.trevi-fountain.002",
+  "countryID": "it",
+  "cityID": "rome",
+  "locationID": "trevi-fountain",
+  "titleKey": "level.it.rome.trevi-fountain.002.title",
+  "factID": "fact.it.rome.trevi-fountain.002",
+  "presentation": { "boardStyle": "standing" },
+  "puzzle": {
+    "family": "position",
+    "capabilities": ["spatialPositioning", "swap", "undo"],
+    "entities": [
+      { "id": "livia", "nameKey": "character.livia" },
+      { "id": "marco", "nameKey": "character.marco" },
+      { "id": "sara", "nameKey": "character.sara" },
+      { "id": "tomas", "nameKey": "character.tomas" }
+    ],
+    "positions": [
+      { "id": "spot.1", "row": 0, "column": 0, "group": "terrace" },
+      { "id": "spot.2", "row": 0, "column": 1, "group": "terrace" },
+      { "id": "spot.3", "row": 0, "column": 2, "group": "terrace" },
+      { "id": "spot.4", "row": 0, "column": 3, "group": "terrace" }
+    ],
+    "initialAssignments": [],
+    "constraints": [
+      { "type": "leftOf", "subjectID": "livia", "relatedID": "marco", "clueKey": "clue.it.rome.trevi-fountain.002.01" },
+      { "type": "immediatelyLeftOf", "subjectID": "sara", "relatedID": "tomas", "clueKey": "clue.it.rome.trevi-fountain.002.02" },
+      { "type": "immediatelyLeftOf", "subjectID": "marco", "relatedID": "sara", "clueKey": "clue.it.rome.trevi-fountain.002.03" }
+    ],
+    "movePolicy": {
+      "threeStarThreshold": 4,
+      "twoStarThreshold": 6,
+      "undoCountsAsMove": false,
+      "occupiedDropPolicy": "swap",
+      "placementPolicy": "verified",
+      "moveLimit": 8
+    }
+  }
+}

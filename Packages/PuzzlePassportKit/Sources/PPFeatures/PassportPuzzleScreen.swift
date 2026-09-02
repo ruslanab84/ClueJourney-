@@ -103,7 +103,7 @@ struct PassportPuzzleScreen: View {
 
     private func gameColumn(_ experience: PuzzleExperience) -> some View {
         VStack(spacing: PPSpacing.xSmall) {
-            IllustratedTheatreBoard(
+            IllustratedPuzzleBoard(
                 level: experience.level,
                 session: experience.session,
                 selectedEntityID: model.selectedEntityID,
@@ -140,7 +140,7 @@ struct PassportPuzzleScreen: View {
     }
 }
 
-private struct IllustratedTheatreBoard: View {
+private struct IllustratedPuzzleBoard: View {
     let level: CampaignLevel
     let session: PuzzleSession
     let selectedEntityID: EntityID?
@@ -156,7 +156,7 @@ private struct IllustratedTheatreBoard: View {
 
     var body: some View {
         ZStack {
-            Image("PPTheatreBoard", bundle: .main)
+            Image(experienceArtworkName, bundle: .main)
                 .resizable()
                 .scaledToFill()
 
@@ -180,6 +180,10 @@ private struct IllustratedTheatreBoard: View {
                 .stroke(PPColor.border, lineWidth: 1)
         }
         .shadow(color: PPColor.ink.opacity(0.1), radius: 4, y: 2)
+    }
+
+    private var experienceArtworkName: String {
+        level.boardStyle.artworkAssetName
     }
 
     private func seat(_ position: PuzzlePosition) -> some View {

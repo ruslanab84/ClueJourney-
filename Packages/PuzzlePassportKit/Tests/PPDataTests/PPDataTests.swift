@@ -12,11 +12,11 @@ struct PPDataTests {
         let levels = try await repository.levels()
         let facts = try await repository.facts()
 
-        #expect(levels.count == 1)
-        #expect(facts.count == 1)
-        #expect(levels[0].factID == facts[0].id)
-        #expect(levels[0].puzzle.movePolicy.placement == .verified)
-        #expect(levels[0].puzzle.movePolicy.moveLimit == 7)
+        #expect(levels.count == 5)
+        #expect(facts.count == 5)
+        #expect(Set(levels.map(\.factID)) == Set(facts.map(\.id)))
+        #expect(levels.allSatisfy { $0.puzzle.movePolicy.placement == .verified })
+        #expect(levels.allSatisfy { $0.puzzle.movePolicy.moveLimit != nil })
     }
 
     @Test("SwiftData keeps best progress and a single discovery")

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "it.rome.fiumicino-flight.003",
+  "countryID": "it",
+  "cityID": "rome",
+  "locationID": "fiumicino-flight",
+  "titleKey": "level.it.rome.fiumicino-flight.003.title",
+  "factID": "fact.it.rome.fiumicino-flight.003",
+  "presentation": { "boardStyle": "aircraft" },
+  "puzzle": {
+    "family": "position",
+    "capabilities": ["spatialPositioning", "swap", "undo"],
+    "entities": [
+      { "id": "livia", "nameKey": "character.livia" },
+      { "id": "marco", "nameKey": "character.marco" },
+      { "id": "sara", "nameKey": "character.sara" },
+      { "id": "tomas", "nameKey": "character.tomas" }
+    ],
+    "positions": [
+      { "id": "seat.1a", "row": 0, "column": 0, "group": "row-1" },
+      { "id": "seat.1b", "row": 0, "column": 1, "group": "row-1" },
+      { "id": "seat.2a", "row": 1, "column": 0, "group": "row-2" },
+      { "id": "seat.2b", "row": 1, "column": 1, "group": "row-2" }
+    ],
+    "initialAssignments": [],
+    "constraints": [
+      { "type": "fixedAssignment", "subjectID": "marco", "positionID": "seat.1a", "clueKey": "clue.it.rome.fiumicino-flight.003.01" },
+      { "type": "sameRow", "subjectID": "livia", "relatedID": "marco", "clueKey": "clue.it.rome.fiumicino-flight.003.02" },
+      { "type": "fixedAssignment", "subjectID": "tomas", "positionID": "seat.2a", "clueKey": "clue.it.rome.fiumicino-flight.003.03" },
+      { "type": "fixedAssignment", "subjectID": "sara", "positionID": "seat.2b", "clueKey": "clue.it.rome.fiumicino-flight.003.04" }
+    ],
+    "movePolicy": {
+      "threeStarThreshold": 4,
+      "twoStarThreshold": 6,
+      "undoCountsAsMove": false,
+      "occupiedDropPolicy": "swap",
+      "placementPolicy": "verified",
+      "moveLimit": 8
+    }
+  }
+}

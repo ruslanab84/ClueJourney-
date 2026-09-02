@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "fact.it.rome.fiumicino-flight.003",
+  "locationID": "fiumicino-flight",
+  "titleKey": "fact.it.rome.fiumicino-flight.003.title",
+  "bodyKey": "fact.it.rome.fiumicino-flight.003.body",
+  "unlockLevelID": "it.rome.fiumicino-flight.003",
+  "source": {
+    "title": "By plane — Turismo Roma",
+    "url": "https://www.turismoroma.it/en/page/plane",
+    "accessed": "2026-09-02"
+  }
+}
