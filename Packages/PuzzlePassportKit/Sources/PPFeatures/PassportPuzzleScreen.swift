@@ -16,17 +16,11 @@ struct PassportPuzzleScreen: View {
                 ScrollView {
                     VStack(spacing: PPSpacing.small) {
                         header(experience)
-                        VStack(spacing: PPSpacing.small) {
-                            gameColumn(experience)
-                            ClueRail(
-                                keys: experience.level.clueKeys,
-                                evaluations: model.clueEvaluations
-                            )
-                        }
+                        puzzleSurface(experience)
                     }
                     .padding(.horizontal, PPSpacing.small)
                     .padding(.vertical, PPSpacing.xSmall)
-                    .frame(maxWidth: 760)
+                    .frame(maxWidth: 860)
                     .frame(maxWidth: .infinity)
                 }
                 .disabled(model.isOutOfMoves)
@@ -50,23 +44,55 @@ struct PassportPuzzleScreen: View {
     private func header(_ experience: PuzzleExperience) -> some View {
         HStack(spacing: PPSpacing.xSmall) {
             PPBackButton { dismiss() }
-            VStack(spacing: 0) {
+
+            VStack(spacing: 1) {
                 Text(ppLocalized("location.\(experience.level.locationID.rawValue).name").uppercased())
-                    .font(.subheadline.weight(.black))
+                    .font(.headline.weight(.black))
+                    .fontDesign(.rounded)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.68)
                 Text(ppLocalized(experience.level.titleKey))
-                    .font(.caption.bold())
+                    .font(.caption.weight(.bold))
                     .foregroundStyle(PPColor.teal)
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity)
+
             PPMoveBadge(moveCount: model.remainingMoves ?? experience.session.moveCount)
+        }
+    }
+
+    private func puzzleSurface(_ experience: PuzzleExperience) -> some View {
+        PPPostcardCard {
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top, spacing: PPSpacing.small) {
+                    gameColumn(experience)
+                        .frame(minWidth: 430, maxWidth: .infinity)
+                    sideRail(experience)
+                        .frame(width: 190)
+                }
+
+                VStack(spacing: PPSpacing.small) {
+                    gameColumn(experience)
+                    sideRail(experience)
+                }
+            }
+        }
+    }
+
+    private func sideRail(_ experience: PuzzleExperience) -> some View {
+        VStack(alignment: .trailing, spacing: PPSpacing.xxSmall) {
             actionsMenu(
                 canUndo: !experience.session.history.isEmpty,
                 isBudgeted: experience.level.puzzle.movePolicy.moveLimit != nil
             )
+
+            ClueRail(
+                keys: experience.level.clueKeys,
+                evaluations: model.clueEvaluations
+            )
         }
+        .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
     private func actionsMenu(canUndo: Bool, isBudgeted: Bool) -> some View {
@@ -95,8 +121,12 @@ struct PassportPuzzleScreen: View {
         } label: {
             Image(systemName: "gearshape.fill")
                 .font(.headline)
-                .foregroundStyle(PPColor.ink)
-                .frame(width: 44, height: 44)
+                .foregroundStyle(PPColor.teal)
+                .frame(width: 40, height: 40)
+                .background(PPColor.paper.opacity(0.86), in: .circle)
+                .overlay {
+                    Circle().stroke(PPColor.border.opacity(0.75), lineWidth: 1)
+                }
         }
         .accessibilityLabel(Text(ppLocalized("puzzle.actions")))
     }
@@ -427,14 +457,16 @@ private struct ClueRail: View {
         VStack(alignment: .leading, spacing: PPSpacing.small) {
             Text(ppLocalized("puzzle.clues").uppercased())
                 .font(.caption.weight(.black))
+                .foregroundStyle(PPColor.ink.opacity(0.76))
                 .frame(maxWidth: .infinity)
 
             ForEach(Array(keys.enumerated()), id: \.offset) { index, key in
                 HStack(alignment: .top, spacing: PPSpacing.xxSmall) {
                     Text("\(index + 1).")
                         .font(.caption2.weight(.black))
+                        .foregroundStyle(PPColor.ink.opacity(0.7))
                     Text(ppLocalized(key))
-                        .font(.caption2)
+                        .font(.caption2.weight(.medium))
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: 0)
                     Image(systemName: symbol(at: index))
@@ -446,12 +478,12 @@ private struct ClueRail: View {
                 .accessibilityValue(Text(statusKey(at: index)))
             }
         }
-        .padding(PPSpacing.xSmall)
+        .padding(PPSpacing.small)
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(PPColor.surface, in: .rect(cornerRadius: PPRadius.card))
+        .background(PPColor.paper.opacity(0.72), in: .rect(cornerRadius: PPRadius.card))
         .overlay {
             RoundedRectangle(cornerRadius: PPRadius.card)
-                .stroke(PPColor.border.opacity(0.78), lineWidth: 1)
+                .stroke(PPColor.border.opacity(0.82), lineWidth: 1)
         }
     }
 
